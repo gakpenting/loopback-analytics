@@ -10,9 +10,9 @@ import {
 export class HelloController {
   constructor(@repository(TokenRepository)
   public tokenRepository: TokenRepository,) {}
-  private YOUR_CLIENT_ID:string="501095674467-42nfkibg9kofi30spdd49ibsgrsgdi1s.apps.googleusercontent.com";
-  private YOUR_CLIENT_SECRET:string="vMbPpi83cDGWL9J2Rl9hjBjN";
-  private YOUR_REDIRECT_URL:string="https://loopback-analytics.herokuapp.com/oauthcallback";
+  private YOUR_CLIENT_ID:string;
+  private YOUR_CLIENT_SECRET:string;
+  private YOUR_REDIRECT_URL:string;
   public oauth2Client:any=new google.auth.OAuth2(
     this.YOUR_CLIENT_ID,
     this.YOUR_CLIENT_SECRET,
