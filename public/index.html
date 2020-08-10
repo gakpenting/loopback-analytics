@@ -1,0 +1,88 @@
+<style>
+  #customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #customers tr:hover {background-color: #ddd;}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }
+  </style>
+<div id=app>
+  <button v-if="!hide" @click="login">LOGIN</button>
+  <input type="text" placeholder="view id" v-model="viewId" v-if="hide" />
+  <button @click="process" v-if="hide">PROCESS</button>
+  <table id="customers" v-if="hide">
+<thead>
+<th>Dates</th>
+<th>User visit</th>
+</thead>
+<tbody>
+  <tr v-for="a in dataView">
+    <td>{{a.dimensions[0] | change}}</td>
+    <td>{{a.metrics[0].values[0]}}</td>
+  </tr>
+</tbody>
+  </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  Vue.filter('change', function (value) {
+    if (!value) return ""
+    const regexp = /(\d{4})(\d{2})(\d{2})/g;
+const str = value;
+
+const [date] = [...str.matchAll(regexp)];
+const [full,year,month,day]=date
+return `${day}-${month}-${year}`
+})
+  var app = new Vue({
+  el: '#app',
+  data: {
+    hide: false,
+    viewId:null,
+    dataView:[]
+  },
+  mounted(){
+    if(localStorage.getItem("login")){
+      this.hide=true
+
+    }
+    
+  },
+  methods:{
+login(){
+  localStorage.setItem("login","s")
+  window.location.href="/oauth"
+},
+async process(){
+  if(this.viewId){
+    const res=await axios.get(`/hello?view_id=${this.viewId}`)
+    if(!res.data.error){
+this.dataView=res.data.reports[0].data.rows
+    }else{
+      this.dataView=[]
+    }
+    
+  }
+  
+
+}
+  }
+})
+</script>
